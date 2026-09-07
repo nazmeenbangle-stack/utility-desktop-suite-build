@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Utility Desktop Suite</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+    :root {
+      --bg-color: #f1f5f9;
+      --card-bg: #ffffff;
+      --card-inner: #f8fafc;
+      --border-color: #e2e8f0;
+      
+      --accent-primary: #2563eb;
+      --accent-emerald: #059669;
+      --accent-rose: #dc2626;
+      
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+    }
+
+    * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; }
+    
+    body { 
+      background-color: var(--bg-color); 
+      color: var(--text-main);
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      min-height: 100vh; 
+      margin: 0; 
+      padding: 20px; 
+    }
+
+    .calculator-container { 
+      width: 540px; 
+      background: var(--card-bg); 
+      border: 1px solid var(--border-color);
+      border-radius: 20px; 
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04); 
+      overflow: hidden; 
+    }
+
+    .header { 
+      background: #ffffff;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--accent-primary); 
+      text-align: center; 
+      padding: 16px; 
+      font-size: 16px; 
+      font-weight: 700; 
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .tabs { 
+      display: flex; 
+      background: #f8fafc; 
+      border-bottom: 1px solid var(--border-color); 
+      padding: 4px;
+      gap: 4px;
+    }
+
+    .tab-btn { 
+      flex: 1; 
+      padding: 10px 8px; 
+      border: none; 
+      background: transparent; 
+      border-radius: 8px;
+      cursor: pointer; 
+      font-size: 13px; 
+      font-weight: 600; 
+      color: var(--text-muted); 
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover { color: var(--text-main); background: #e2e8f0; }
+    .tab-btn.active { 
+      background: var(--accent-primary); 
+      color: #ffffff; 
+      box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+    }
+
+    .tab-content { display: none; padding: 20px; }
+    .tab-content.active { display: block; }
+    
+    label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 12px; color: var(--text-muted); text-transform: uppercase; }
+    
+    input[type="number"], input[type="text"] { 
+      width: 100%; 
+      padding: 10px 12px; 
+      background: #ffffff;
+      color: var(--text-main);
+      border: 1px solid var(--border-color); 
+      border-radius: 8px; 
+      font-size: 14px; 
+      margin-bottom: 10px; 
+      outline: none;
+    }
+
+    input:focus { border-color: var(--accent-primary); }
+
+    .btn-group { display: flex; gap: 10px; margin-top: 14px; }
+    .btn { 
+      flex: 1; 
+      padding: 11px; 
+      border: none; 
+      border-radius: 8px; 
+      font-weight: 700; 
+      cursor: pointer; 
+      color: #fff; 
+      font-size: 13px; 
+    }
+
+    .btn-primary { background: var(--accent-primary); }
+    .btn-success { background: var(--accent-emerald); }
+    .btn-danger { background: var(--accent-rose); }
+
+    .summary-card { 
+      background: var(--card-inner); 
+      border: 1px solid var(--border-color); 
+      padding: 16px; 
+      border-radius: 10px; 
+      margin-top: 16px; 
+    }
+
+    .summary-line { font-size: 14px; margin: 6px 0; color: var(--text-muted); }
+    .summary-total { font-size: 19px; font-weight: 700; color: var(--accent-emerald); text-align: center; }
+
+    /* --- IPHONE STYLE CALCULATOR --- */
+    .iphone-calc-wrapper {
+      background: #000000;
+      border-radius: 24px;
+      padding: 20px;
+      max-width: 320px;
+      margin: 0 auto;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .iphone-display {
+      text-align: right;
+      color: #ffffff;
+      padding: 10px 8px;
+      margin-bottom: 10px;
+      min-height: 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .iphone-history {
+      font-size: 14px;
+      color: #a5a5a5;
+      min-height: 20px;
+    }
+
+    .iphone-screen {
+      font-size: 42px;
+      font-weight: 300;
+      color: #ffffff;
+      background: transparent;
+      border: none;
+      text-align: right;
+      width: 100%;
+      outline: none;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .iphone-keypad {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .iphone-btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: none;
+      font-size: 22px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: filter 0.15s, transform 0.1s;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .iphone-btn:active { transform: scale(0.95); filter: brightness(1.3); }
+
+    .btn-gray { background: #a5a5a5; color: #000000; }
+    .btn-dark { background: #333333; color: #ffffff; }
+    .btn-orange { background: #ff9f0a; color: #ffffff; font-size: 26px; }
+    .btn-zero { grid-column: span 2; width: 100%; border-radius: 30px; justify-content: flex-start; padding-left: 24px; }
+
+    /* --- DENOMINATION WITH BADGES --- */
+    .denom-container { max-height: 330px; overflow-y: auto; padding-right: 4px; }
+    .denom-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; background: var(--card-inner); padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border-color); }
+    
+    .denom-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 150px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .currency-badge {
+      width: 48px;
+      height: 26px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 800;
+      color: #ffffff;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.15), 0 2px 4px rgba(0,0,0,0.1);
+      letter-spacing: 0.5px;
+    }
+
+    .note-500 { background: linear-gradient(135deg, #a39e8f 0%, #615a4c 100%); }
+    .note-200 { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+    .note-100 { background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); }
+    .note-50  { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); }
+    .note-20  { background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%); }
+    .note-10  { background: linear-gradient(135deg, #b45309 0%, #78350f 100%); }
+    .note-coin { background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%); border-radius: 50%; width: 28px; height: 28px; }
+
+    .denom-row input { width: 85px; margin: 0; text-align: center; }
+    .denom-row span { width: 100px; text-align: right; font-weight: 700; font-size: 15px; color: var(--accent-emerald); }
+
+    /* Bill Calculator */
+    .bill-header { display: flex; gap: 8px; font-weight: 700; font-size: 11px; color: var(--text-muted); background: #f8fafc; padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 1px solid var(--border-color); }
+    .bill-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+    .col-item { flex: 2; }
+    .col-qty { flex: 1; }
+    .col-rate { flex: 1.2; }
+    .col-amt { flex: 1.2; text-align: right; font-weight: 700; font-size: 14px; color: var(--accent-primary); padding-right: 4px; }
+    .col-del { width: 34px; height: 36px; background: #fef2f2; color: var(--accent-rose); border: 1px solid #fecaca; border-radius: 6px; cursor: pointer; font-weight: bold; }
+    .bill-rows-container { max-height: 260px; overflow-y: auto; }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+  </style>
+</head>
+<body>
+
+<div class="calculator-container">
+  <div class="header">Utility Desktop Suite</div>
+  
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab(0)">Bill Calc</button>
+    <button class="tab-btn" onclick="switchTab(1)">GST</button>
+    <button class="tab-btn" onclick="switchTab(2)">Normal</button>
+    <button class="tab-btn" onclick="switchTab(3)">Cash Denom</button>
+  </div>
+
+  <!-- TAB 1: Itemized Bill Calculator -->
+  <div class="tab-content active">
+    <div class="bill-header">
+      <span class="col-item">Item Name</span>
+      <span class="col-qty">Qty</span>
+      <span class="col-rate">Rate (₹)</span>
+      <span class="col-amt">Amount</span>
+      <span style="width: 34px;"></span>
+    </div>
+
+    <div class="bill-rows-container" id="bill-container"></div>
+
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="addBillRow(true)">+ Add Item</button>
+      <button class="btn btn-danger" onclick="clearBill()">Clear</button>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-total" id="bill-grand-total">Grand Total: ₹0.00</div>
+    </div>
+  </div>
+
+  <!-- TAB 2: GST Calculator -->
+  <div class="tab-content">
+    <label>Initial Amount (₹)</label>
+    <input type="number" id="gst-amount" placeholder="e.g. 1000">
+    
+    <label>GST Rate (%)</label>
+    <input type="number" id="gst-rate" value="18">
+
+    <div class="btn-group">
+      <button class="btn btn-success" onclick="calcGST(true)">+ Add GST</button>
+      <button class="btn btn-danger" onclick="calcGST(false)">- Remove GST</button>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-line" id="gst-net">Net Amount: ₹0.00</div>
+      <div class="summary-line" id="gst-tax">GST Amount: ₹0.00</div>
+      <div class="summary-total" id="gst-total" style="text-align: left;">Total Amount: ₹0.00</div>
+    </div>
+  </div>
+
+  <!-- TAB 3: Normal Calculator -->
+  <div class="tab-content">
+    <div class="iphone-calc-wrapper">
+      <div class="iphone-display">
+        <div class="iphone-history" id="calc-history"></div>
+        <input type="text" class="iphone-screen" id="calc-screen" value="0" readonly>
+      </div>
+      
+      <div class="iphone-keypad">
+        <button class="iphone-btn btn-gray" onclick="clearCalc()">AC</button>
+        <button class="iphone-btn btn-gray" onclick="backspaceCalc()">⌫</button>
+        <button class="iphone-btn btn-gray" onclick="pressCalc('%')">%</button>
+        <button class="iphone-btn btn-orange" onclick="pressCalc('/')">÷</button>
+        
+        <button class="iphone-btn btn-dark" onclick="pressCalc('7')">7</button>
+        <button class="iphone-btn btn-dark" onclick="pressCalc('8')">8</button>
+        <button class="iphone-btn btn-dark" onclick="pressCalc('9')">9</button>
+        <button class="iphone-btn btn-orange" onclick="pressCalc('*')">×</button>
+        
+        <button class="iphone-btn btn-dark" onclick="pressCalc('4')">4</button>
+        <button class="iphone-btn btn-dark" onclick="pressCalc('5')">5</button>
+        <button class="iphone-btn btn-dark" onclick="pressCalc('6')">6</button>
+        <button class="iphone-btn btn-orange" onclick="pressCalc('-')">−</button>
+        
+        <button class="iphone-btn btn-dark" onclick="pressCalc('1')">1</button>
+        <button class="iphone-btn btn-dark" onclick="pressCalc('2')">2</button>
+        <button class="iphone-btn btn-dark" onclick="pressCalc('3')">3</button>
+        <button class="iphone-btn btn-orange" onclick="pressCalc('+')">+</button>
+        
+        <button class="iphone-btn btn-dark btn-zero" onclick="pressCalc('0')">0</button>
+        <button class="iphone-btn btn-dark" onclick="pressCalc('.')">.</button>
+        <button class="iphone-btn btn-orange" onclick="evalCalc()">=</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: Denomination Counter -->
+  <div class="tab-content">
+    <div class="denom-container" id="denom-rows"></div>
+    <div class="summary-card">
+      <div class="summary-total" id="denom-total">Total Cash: ₹0</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function switchTab(index) {
+    const tabs = document.querySelectorAll('.tab-btn');
+    const contents = document.querySelectorAll('.tab-content');
+    tabs.forEach((tab, i) => {
+      tab.classList.toggle('active', i === index);
+      contents[i].classList.toggle('active', i === index);
+    });
+  }
+
+  // --- BILL CALCULATOR ---
+  const billContainer = document.getElementById('bill-container');
+
+  function addBillRow(focusNew = false, itemName = '', qty = 1, rate = '') {
+    const row = document.createElement('div');
+    row.className = 'bill-row';
+    row.innerHTML = `
+      <input type="text" class="col-item" placeholder="Item name" value="${itemName}">
+      <input type="number" class="col-qty" min="0" value="${qty}" oninput="updateBillTotals()">
+      <input type="number" class="col-rate" min="0" value="${rate}" placeholder="0" oninput="updateBillTotals()" onkeydown="handleRateKeydown(event, this)">
+      <span class="col-amt">₹0.00</span>
+      <button class="col-del" onclick="removeBillRow(this)">✕</button>
+    `;
+    billContainer.appendChild(row);
+    updateBillTotals();
+
+    if (focusNew) {
+      billContainer.scrollTop = billContainer.scrollHeight;
+      row.querySelector('.col-item').focus();
+    }
+  }
+
+  function handleRateKeydown(event, inputElement) {
+    if (event.key === 'Tab' && !event.shiftKey) {
+      const isLastRow = inputElement.parentElement === billContainer.lastElementChild;
+      if (isLastRow) {
+        event.preventDefault();
+        addBillRow(true);
+      }
+    }
+  }
+
+  function removeBillRow(btn) {
+    btn.parentElement.remove();
+    updateBillTotals();
+  }
+
+  function updateBillTotals() {
+    let grandTotal = 0;
+    const rows = billContainer.querySelectorAll('.bill-row');
+    rows.forEach(row => {
+      const qty = parseFloat(row.querySelector('.col-qty').value) || 0;
+      const rate = parseFloat(row.querySelector('.col-rate').value) || 0;
+      const amount = qty * rate;
+      row.querySelector('.col-amt').innerText = `₹${amount.toFixed(2)}`;
+      grandTotal += amount;
+    });
+    document.getElementById('bill-grand-total').innerText = `Grand Total: ₹${grandTotal.toFixed(2)}`;
+  }
+
+  function clearBill() {
+    billContainer.innerHTML = '';
+    addBillRow(false);
+  }
+
+  addBillRow(false, 'Item 1', 2, 24);
+
+  // --- GST CALCULATOR ---
+  function calcGST(isAdd) {
+    const amt = parseFloat(document.getElementById('gst-amount').value) || 0;
+    const rate = parseFloat(document.getElementById('gst-rate').value) || 0;
+    let net, tax, total;
+
+    if (isAdd) {
+      tax = amt * (rate / 100);
+      total = amt + tax;
+      net = amt;
+    } else {
+      net = amt / (1 + (rate / 100));
+      tax = amt - net;
+      total = amt;
+    }
+
+    document.getElementById('gst-net').innerText = `Net Amount: ₹${net.toFixed(2)}`;
+    document.getElementById('gst-tax').innerText = `GST Amount (${rate}%): ₹${tax.toFixed(2)}`;
+    document.getElementById('gst-total').innerText = `Total Amount: ₹${total.toFixed(2)}`;
+  }
+
+  // --- CONTEXT-AWARE NORMAL CALCULATOR ---
+  let calcInput = "";
+
+  function updateDisplay() {
+    const screen = document.getElementById('calc-screen');
+    if (!calcInput) {
+      screen.value = "0";
+    } else {
+      screen.value = calcInput.replace(/\*/g, '×').replace(/\//g, '÷').replace(/-/g, '−');
+    }
+  }
+
+  function pressCalc(val) {
+    if (calcInput === "Error") calcInput = "";
+    
+    // Avoid double operators
+    const lastChar = calcInput.slice(-1);
+    const operators = ['+', '-', '*', '/'];
+    if (operators.includes(lastChar) && operators.includes(val)) {
+      calcInput = calcInput.slice(0, -1) + val;
+      updateDisplay();
+      return;
+    }
+
+    calcInput += val;
+    updateDisplay();
+  }
+
+  function clearCalc() {
+    calcInput = "";
+    document.getElementById('calc-history').innerText = "";
+    updateDisplay();
+  }
+
+  function backspaceCalc() {
+    if (calcInput === "Error") {
+      calcInput = "";
+    } else {
+      calcInput = calcInput.slice(0, -1);
+    }
+    updateDisplay();
+  }
+
+  function parsePercentageExpression(expr) {
+    let parsed = expr.replace(/(\d+(\.\d+)?)\s*([\+\-])\s*(\d+(\.\d+)?)%/g, '$1 $3 ($1 * ($4 / 100))');
+    parsed = parsed.replace(/(\d+(\.\d+)?)\s*([\*\/])\s*(\d+(\.\d+)?)%/g, '$1 $3 ($4 / 100)');
+    parsed = parsed.replace(/(\d+(\.\d+)?)%/g, '($1 / 100)');
+    return parsed;
+  }
+
+  function evalCalc() {
+    if (!calcInput || calcInput === "Error") return;
+    try {
+      let displayExpr = calcInput.replace(/\*/g, '×').replace(/\//g, '÷').replace(/-/g, '−');
+      let executableExpr = parsePercentageExpression(calcInput);
+      
+      let result = Function('"use strict";return (' + executableExpr + ')')();
+      
+      if (typeof result === 'number' && !Number.isInteger(result)) {
+        result = parseFloat(result.toFixed(8));
+      }
+
+      document.getElementById('calc-history').innerText = displayExpr + " =";
+      calcInput = result.toString();
+      updateDisplay();
+    } catch (e) {
+      calcInput = "Error";
+      updateDisplay();
+    }
+  }
+
+  // --- DENOMINATION COUNTER ---
+  const denomConfig = [
+    { value: 500, class: 'note-500', label: '₹500' },
+    { value: 200, class: 'note-200', label: '₹200' },
+    { value: 100, class: 'note-100', label: '₹100' },
+    { value: 50,  class: 'note-50',  label: '₹50' },
+    { value: 20,  class: 'note-20',  label: '₹20' },
+    { value: 10,  class: 'note-10',  label: '₹10' },
+    { value: 5,   class: 'note-coin', label: '₹5' },
+    { value: 2,   class: 'note-coin', label: '₹2' },
+    { value: 1,   class: 'note-coin', label: '₹1' }
+  ];
+
+  const denomContainer = document.getElementById('denom-rows');
+
+  denomConfig.forEach(item => {
+    const row = document.createElement('div');
+    row.className = 'denom-row';
+    row.innerHTML = `
+      <div class="denom-badge">
+        <div class="currency-badge ${item.class}">${item.label}</div>
+        <span>₹ ${item.value}</span>
+      </div>
+      <input type="number" min="0" placeholder="0" oninput="updateDenom()">
+      <span id="denom-sub-${item.value}">₹0</span>
+    `;
+    denomContainer.appendChild(row);
+  });
+
+  function updateDenom() {
+    let grandTotal = 0;
+    const inputs = denomContainer.querySelectorAll('input');
+    inputs.forEach((input, idx) => {
+      const count = parseInt(input.value) || 0;
+      const sub = count * denomConfig[idx].value;
+      document.getElementById(`denom-sub-${denomConfig[idx].value}`).innerText = `₹${sub.toLocaleString()}`;
+      grandTotal += sub;
+    });
+    document.getElementById('denom-total').innerText = `Total Cash: ₹${grandTotal.toLocaleString()}`;
+  }
+</script>
+
+</body>
+</html>
