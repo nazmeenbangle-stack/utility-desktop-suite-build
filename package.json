@@ -1,0 +1,32 @@
+{
+  "name": "utility-desktop-suite",
+  "version": "1.0.0",
+  "description": "Utility Desktop Suite — wrapped with Electron",
+  "main": "main.js",
+  "author": "",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win portable"
+  },
+  "devDependencies": {
+    "electron": "^26.0.0",
+    "electron-builder": "^24.5.0"
+  },
+  "build": {
+    "appId": "com.nazmeenbangle.utilitydesktopsuite",
+    "productName": "Utility Desktop Suite",
+    "files": [
+      "**/*"
+    ],
+    "directories": {
+      "buildResources": "build"
+    },
+    "win": {
+      "target": [
+        "portable"
+      ],
+      "icon": "build/icon.ico"
+    }
+  }
+}
